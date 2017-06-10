@@ -15,51 +15,93 @@ B0344247  許定楠
 關心全台感染HIV病毒的病例分布，藉由此次分析提升大眾對於HIV病毒的重視。
 
 ## 使用資料
-資料集描述 : 2003年起各地區、各年齡層、性別之病例數統計表
+資料集描述 : 2003-2017起各地區、各年齡層、性別之病例數統計表
 (疾病名稱：HIV感染，日期種類：診斷日，病例種類：確定病例，感染來源：本國籍、非本國籍)。
 主要欄位說明 : 「確定病名」、「診斷年份」、「診斷月份」、「縣市」、「性別」、「國籍」、「年齡層」、「確定病例數」。
 
-載入使用資料們
+## 載入使用資料們
 ```{r}
 library(readxl)
-Age_County_Gender_044 <- read_excel("D:/data/Desktop/Age_County_Gender_044.xlsx")
-Age_County_Gender_044
+aa<- read_excel("~/Desktop/Age_County_Gender_044.xlsx")
+aa
+
 ```
 
 ## 資料處理與清洗
 說明處理資料的步驟
 
-1. 用str()函數總覽Age_County_Gender_044這個資料框的欄位與欄位類別。
-2. 可以發現此Age_County_Gender_044資料框內有13276筆資料(觀察值,obs)，每筆資料有8個欄位 (variables)。
-3. 如果想看資料框內容，可用head()(表二)和tail()(表三)快速瀏覽部分資料。
-4. 使用complete.cases來選出完整的資料列，如果資料列是完整的，則會回傳真TRUE。
+1.用str()函數總覽Age_County_Gender_044這個資料框的欄位與欄位類別;資料框內有13276筆資料(觀察值,obs)，每筆資料有8個欄位 (variables)。
+2.使用complete.cases來選出完整的資料列，如果資料列是完整的，則會回傳真TRUE;表中顯示所有資料皆是完整。
+3.處理各年份、月份、縣市、性別總確定病例數由大至小排序
 
-處理資料
-```{r}
-str(Age_County_Gender_044)
-head(Age_County_Gender_044)
-tail(Age_County_Gender_044)
-complete.cases(Age_County_Gender_044)
-```
-
-## 探索式資料分析
-
-1. 使用data.table()函數將data.frame轉為data.table格式，讀取大型資料的速度比使用資料框快上數倍。
-2. 統計2003-2017年HIV確定病例數的人數為30943人。
-3. 表格一的篩選條件為"確定病例數>20"，由此可知2005年的6.7月份、2006年、2011年、2014年感染HIV病毒的病例數偏高。
-4. 表格一的篩選條件為"確定病例數>20"，由此可知以年齡於25-29歲的本國籍男性為主。
-5. 表格一的篩選條件為"確定病例數>20"，由此可知感染HIV病毒的縣市以高雄市、桃園市、新北市居多。
-
+## 處理資料
 ```{r}
 library(dplyr)
 library(data.table)
-Age_County_Gender_044_DT<-data.table(Age_County_Gender_044)
-class(Age_County_Gender_044_DT)
 
-Age_County_Gender_044_DT[,sum(.dots=確定病例數)]
-Age_County_Gender_044_DT[確定病例數>=20]
+
+str(aa)
+complete.cases(aa)
+
+
+ac<-data.table(aa)
+ba<-group_by(ac,診斷年份)%>%    
+    summarise(總確定病例數=n())
+baa<-arrange(ba,                
+        desc(總確定病例數))
+baa
+
+ac<-data.table(aa)
+bb<-group_by(ac,診斷月份)%>%  
+    summarise(總確定病例數=n())
+bab<-arrange(bb,                
+        desc(總確定病例數))
+bab
+
+ac<-data.table(aa)
+bc<-group_by(ac,縣市)%>%  
+    summarise(總確定病例數=n())
+bac<-arrange(bc,                
+        desc(總確定病例數))
+bac
+
+ac<-data.table(aa)
+bd<-group_by(ac,性別)%>%  
+    summarise(總確定病例數=n())
+bad<-arrange(bd,                
+        desc(總確定病例數))
+bad
+
+
 ```
 
+## 探索式資料分析
+將原本是一片模糊的情況，刻畫出基本輪廍
+
+假設：
+1.20-24 年輕氣盛，愛滋病例數最多
+2.
+3.
+
+
+```{r}
+
+
+bb<-data.table(aa)
+ss<-bb[grepl('20-24',年齡層)]
+ss
+
+ac<-data.table(aa)
+be<-group_by(ac,年齡層)%>%  
+    summarise(總確定病例數=n())
+bae<-arrange(be,                
+        desc(總確定病例數))
+bae
+
+
+```
+
+<<<<<<< Updated upstream
 ## 折線圖表示各年份的確定病例數，分析感染病例是否逐年上升/下降 (待完成)
 
 ```{r}
@@ -106,3 +148,33 @@ ggmap(twmap)
 
 
 
+=======
+## 期末專題分析規劃
+資料探勘
+期末專題要做HIV感染交叉分析，對於不同年份、縣市、性別、年齡層等因素進行分析與統計，
+將以圖表方式呈現、文字輔助說明。
+
+一、折線圖表示各年份的確定病例數，分析感染病例是否逐漸上升/下降。
+二、探討各縣市確定HIV感染之統計。
+三、探討男性、女性確定HIV感染之人數差異。
+四、探討不同年齡層的確定病例數之排名。
+五、以國籍區分，分析台灣的HIV感染病例。
+
+```{r}
+
+ac<-data.table(aa)
+ba<-group_by(ac,診斷年份)%>%  
+    summarise(總確定病例數=n())
+ba
+
+ac<-data.table(aa)
+bb<-group_by(ac,縣市)%>%  
+    summarise(總確定病例數=n())
+bb
+
+
+
+
+
+```
+>>>>>>> Stashed changes

@@ -19,22 +19,18 @@ B0344109 黃詩茜 B0344247 許定楠
 使用資料
 --------
 
-資料集描述 : 2003年起各地區、各年齡層、性別之病例數統計表 (疾病名稱：HIV感染，日期種類：診斷日，病例種類：確定病例，感染來源：本國籍、非本國籍)。 主要欄位說明 : 「確定病名」、「診斷年份」、「診斷月份」、「縣市」、「性別」、「國籍」、「年齡層」、「確定病例數」。
+資料集描述 : 2003-2017起各地區、各年齡層、性別之病例數統計表 (疾病名稱：HIV感染，日期種類：診斷日，病例種類：確定病例，感染來源：本國籍、非本國籍)。 主要欄位說明 : 「確定病名」、「診斷年份」、「診斷月份」、「縣市」、「性別」、「國籍」、「年齡層」、「確定病例數」。
 
 載入使用資料們
+--------------
 
 ``` r
 library(readxl)
+aa<- read_excel("~/Desktop/Age_County_Gender_044.xlsx")
+aa
 ```
 
-    ## Warning: package 'readxl' was built under R version 3.3.3
-
-``` r
-Age_County_Gender_044 <- read_excel("D:/data/Desktop/Age_County_Gender_044.xlsx")
-Age_County_Gender_044
-```
-
-    ## # A tibble: 13,276 × 8
+    ## # A tibble: 13,275 × 8
     ##      確定病名 診斷年份 診斷月份   縣市  性別     國籍 年齡層 確定病例數
     ##         <chr>    <dbl>    <dbl>  <chr> <chr>    <chr>  <chr>      <dbl>
     ## 1  ＨＩＶ感染     2003        1 新北市     M 非本國籍  20-24          1
@@ -47,25 +43,58 @@ Age_County_Gender_044
     ## 8  ＨＩＶ感染     2003        9 台北市     M 非本國籍  50-54          1
     ## 9  ＨＩＶ感染     2003        9 基隆市     M   本國籍  45-49          1
     ## 10 ＨＩＶ感染     2004        1 新北市     F   本國籍  30-34          1
-    ## # ... with 13,266 more rows
+    ## # ... with 13,265 more rows
 
 資料處理與清洗
 --------------
 
 說明處理資料的步驟
 
-1.  用str()函數總覽Age\_County\_Gender\_044這個資料框的欄位與欄位類別。
-2.  可以發現此Age\_County\_Gender\_044資料框內有13276筆資料(觀察值,obs)，每筆資料有8個欄位 (variables)。
-3.  如果想看資料框內容，可用head()(表二)和tail()(表三)快速瀏覽部分資料。
-4.  使用complete.cases來選出完整的資料列，如果資料列是完整的，則會回傳真TRUE。
+1.  用str()函數總覽Age\_County\_Gender\_044這個資料框的欄位與欄位類別;資料框內有13276筆資料(觀察值,obs)，每筆資料有8個欄位 (variables)。
+2.  使用complete.cases來選出完整的資料列，如果資料列是完整的，則會回傳真TRUE;表中顯示所有資料皆是完整。
+3.  各年份確定病例數
 
 處理資料
+--------
 
 ``` r
-str(Age_County_Gender_044)
+library(dplyr)
 ```
 
-    ## Classes 'tbl_df', 'tbl' and 'data.frame':    13276 obs. of  8 variables:
+    ## 
+    ## Attaching package: 'dplyr'
+
+    ## The following objects are masked from 'package:stats':
+    ## 
+    ##     filter, lag
+
+    ## The following objects are masked from 'package:base':
+    ## 
+    ##     intersect, setdiff, setequal, union
+
+``` r
+library(data.table)
+```
+
+    ## -------------------------------------------------------------------------
+
+    ## data.table + dplyr code now lives in dtplyr.
+    ## Please library(dtplyr)!
+
+    ## -------------------------------------------------------------------------
+
+    ## 
+    ## Attaching package: 'data.table'
+
+    ## The following objects are masked from 'package:dplyr':
+    ## 
+    ##     between, first, last
+
+``` r
+str(aa)
+```
+
+    ## Classes 'tbl_df', 'tbl' and 'data.frame':    13275 obs. of  8 variables:
     ##  $ 確定病名  : chr  "ＨＩＶ感染" "ＨＩＶ感染" "ＨＩＶ感染" "ＨＩＶ感染" ...
     ##  $ 診斷年份  : num  2003 2003 2003 2003 2003 ...
     ##  $ 診斷月份  : num  1 3 5 6 6 6 8 9 9 1 ...
@@ -76,35 +105,33 @@ str(Age_County_Gender_044)
     ##  $ 確定病例數: num  1 3 1 2 2 2 1 1 1 1 ...
 
 ``` r
-head(Age_County_Gender_044)
+ac<-data.table(aa)
+ba<-group_by(ac,診斷年份)%>%  
+    summarise(總確定病例數=n())
+ba
 ```
 
-    ## # A tibble: 6 × 8
-    ##     確定病名 診斷年份 診斷月份   縣市  性別     國籍 年齡層 確定病例數
-    ##        <chr>    <dbl>    <dbl>  <chr> <chr>    <chr>  <chr>      <dbl>
-    ## 1 ＨＩＶ感染     2003        1 新北市     M 非本國籍  20-24          1
-    ## 2 ＨＩＶ感染     2003        3 新北市     M   本國籍  20-24          3
-    ## 3 ＨＩＶ感染     2003        5 桃園市     M   本國籍  20-24          1
-    ## 4 ＨＩＶ感染     2003        6 台北市     M   本國籍  40-44          2
-    ## 5 ＨＩＶ感染     2003        6 宜蘭縣     M   本國籍  20-24          2
-    ## 6 ＨＩＶ感染     2003        6 新北市     M   本國籍  30-34          2
+    ## # A tibble: 15 × 2
+    ##    診斷年份 總確定病例數
+    ##       <dbl>        <int>
+    ## 1      2003          563
+    ## 2      2004          798
+    ## 3      2005         1311
+    ## 4      2006         1252
+    ## 5      2007          996
+    ## 6      2008          886
+    ## 7      2009          842
+    ## 8      2010          850
+    ## 9      2011          881
+    ## 10     2012          863
+    ## 11     2013          877
+    ## 12     2014          906
+    ## 13     2015          905
+    ## 14     2016          938
+    ## 15     2017          407
 
 ``` r
-tail(Age_County_Gender_044)
-```
-
-    ## # A tibble: 6 × 8
-    ##     確定病名 診斷年份 診斷月份   縣市  性別   國籍 年齡層 確定病例數
-    ##        <chr>    <dbl>    <dbl>  <chr> <chr>  <chr>  <chr>      <dbl>
-    ## 1 ＨＩＶ感染     2017        3 宜蘭縣     M 本國籍  20-24          1
-    ## 2 ＨＩＶ感染     2017        3 高雄市     M 本國籍  30-34          3
-    ## 3 ＨＩＶ感染     2017        3 新北市     F 本國籍  45-49          1
-    ## 4 ＨＩＶ感染     2017        3 嘉義縣     M 本國籍  25-29          1
-    ## 5 ＨＩＶ感染     2017        4 高雄市     M 本國籍  45-49          2
-    ## 6 ＨＩＶ感染     2017        5 台中市     M 本國籍  35-39          1
-
-``` r
-complete.cases(Age_County_Gender_044)
+complete.cases(aa)
 ```
 
     ##     [1] TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE
@@ -1128,69 +1155,77 @@ complete.cases(Age_County_Gender_044)
     ## [13235] TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE
     ## [13248] TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE
     ## [13261] TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE
-    ## [13274] TRUE TRUE TRUE
+    ## [13274] TRUE TRUE
 
 探索式資料分析
 --------------
 
-1.  使用data.table()函數將data.frame轉為data.table格式，讀取大型資料的速度比使用資料框快上數倍。
-2.  統計2003-2017年HIV確定病例數的人數為30943人。
-3.  表格一的篩選條件為"確定病例數&gt;20"，由此可知2005年的6.7月份、2006年、2011年、2014年感染HIV病毒的病例數偏高。
-4.  表格一的篩選條件為"確定病例數&gt;20"，由此可知以年齡於25-29歲的本國籍男性為主。
-5.  表格一的篩選條件為"確定病例數&gt;20"，由此可知感染HIV病毒的縣市以高雄市、桃園市、新北市居多。
+將原本是一片模糊的情況，刻畫出基本輪廍
+
+另外探索性研究的結果往往有助於敘述性或因果性研究的進行，如確定所擬定的問卷題目與選項是周詮、是否要進一步研究兩個變數或觀念之間的關係等
+
+分析各變數間的關聯性，看是否有預料之外的有趣發現 觀察資料內容是否符合預期，若否，檢查資料是否有誤 檢查資料是否符合分析前的假設 假設： 1.20-24 年輕氣盛，愛滋病例數最多
 
 ``` r
-library(dplyr)
+bb<-data.table(aa)
+ss<-bb[grepl('20-24',年齡層)]
+ss
 ```
 
-    ## Warning: package 'dplyr' was built under R version 3.3.3
+    ##         確定病名 診斷年份 診斷月份   縣市 性別     國籍 年齡層 確定病例數
+    ##    1: ＨＩＶ感染     2003        1 新北市    M 非本國籍  20-24          1
+    ##    2: ＨＩＶ感染     2003        3 新北市    M   本國籍  20-24          3
+    ##    3: ＨＩＶ感染     2003        5 桃園市    M   本國籍  20-24          1
+    ##    4: ＨＩＶ感染     2003        6 宜蘭縣    M   本國籍  20-24          2
+    ##    5: ＨＩＶ感染     2003        8 基隆市    M   本國籍  20-24          1
+    ##   ---                                                                    
+    ## 2132: ＨＩＶ感染     2016        4 屏東縣    M   本國籍  20-24          1
+    ## 2133: ＨＩＶ感染     2016        7 高雄市    M   本國籍  20-24          4
+    ## 2134: ＨＩＶ感染     2016        8 宜蘭縣    M   本國籍  20-24          1
+    ## 2135: ＨＩＶ感染     2017        1 新北市    F   本國籍  20-24          1
+    ## 2136: ＨＩＶ感染     2017        3 宜蘭縣    M   本國籍  20-24          1
 
-    ## 
-    ## Attaching package: 'dplyr'
+期末專題分析規劃
+----------------
 
-    ## The following objects are masked from 'package:stats':
-    ## 
-    ##     filter, lag
+期末專題要做HIV感染交叉分析，對於不同年份、縣市、性別、年齡層等因素進行分析與統計， 將以圖表方式呈現、文字輔助說明。
 
-    ## The following objects are masked from 'package:base':
-    ## 
-    ##     intersect, setdiff, setequal, union
+一、折線圖表示各年份的確定病例數，分析感染病例是否逐漸上升/下降。 二、探討各縣市確定HIV感染之統計。 三、探討男性、女性確定HIV感染之人數差異。 四、探討不同年齡層的確定病例數之排名。 五、以國籍區分，分析台灣的HIV感染病例。
 
 ``` r
-library(data.table)
+ac<-data.table(aa)
+ba<-group_by(ac,診斷年份)%>%  
+    summarise(總確定病例數=n())
+ba
 ```
 
-    ## -------------------------------------------------------------------------
-
-    ## data.table + dplyr code now lives in dtplyr.
-    ## Please library(dtplyr)!
-
-    ## -------------------------------------------------------------------------
-
-    ## 
-    ## Attaching package: 'data.table'
-
-    ## The following objects are masked from 'package:dplyr':
-    ## 
-    ##     between, first, last
+    ## # A tibble: 15 × 2
+    ##    診斷年份 總確定病例數
+    ##       <dbl>        <int>
+    ## 1      2003          563
+    ## 2      2004          798
+    ## 3      2005         1311
+    ## 4      2006         1252
+    ## 5      2007          996
+    ## 6      2008          886
+    ## 7      2009          842
+    ## 8      2010          850
+    ## 9      2011          881
+    ## 10     2012          863
+    ## 11     2013          877
+    ## 12     2014          906
+    ## 13     2015          905
+    ## 14     2016          938
+    ## 15     2017          407
 
 ``` r
-Age_County_Gender_044_DT<-data.table(Age_County_Gender_044)
-class(Age_County_Gender_044_DT)
+ac<-data.table(aa)
+bb<-group_by(ac,縣市)%>%  
+    summarise(總確定病例數=n())
+bb
 ```
 
-    ## [1] "data.table" "data.frame"
-
-``` r
-Age_County_Gender_044_DT[,sum(.dots=確定病例數)]
-```
-
-    ## [1] 30943
-
-``` r
-Age_County_Gender_044_DT[確定病例數>=20]
-```
-
+<<<<<<< Updated upstream
     ##      確定病名 診斷年份 診斷月份   縣市 性別   國籍 年齡層 確定病例數
     ## 1: ＨＩＶ感染     2005        6 高雄市    M 本國籍  25-29         21
     ## 2: ＨＩＶ感染     2005        7 桃園市    M 本國籍  25-29         21
@@ -1268,3 +1303,19 @@ ggmap(twmap)
 ```
 
 ![](README_files/figure-markdown_github/unnamed-chunk-8-1.png)
+=======
+    ## # A tibble: 22 × 2
+    ##      縣市 總確定病例數
+    ##     <chr>        <int>
+    ## 1  高雄市         1422
+    ## 2  花蓮縣          284
+    ## 3  基隆市          426
+    ## 4  嘉義市          128
+    ## 5  嘉義縣          292
+    ## 6  金門縣           23
+    ## 7  連江縣            9
+    ## 8  苗栗縣          249
+    ## 9  南投縣          443
+    ## 10 澎湖縣           27
+    ## # ... with 12 more rows
+>>>>>>> Stashed changes
