@@ -4,7 +4,7 @@ HIV 感染病例分析
 組員姓名
 --------
 
-黃詩茜 許定楠
+B0344109 黃詩茜 B0344247 許定楠
 
 分析議題背景
 ------------
@@ -1199,9 +1199,72 @@ Age_County_Gender_044_DT[確定病例數>=20]
     ## 5: ＨＩＶ感染     2014        4 新北市    M 本國籍  25-29         21
     ## 6: ＨＩＶ感染     2014        4 新北市    M 本國籍  20-24         24
 
-期末專題分析規劃
-----------------
+折線圖表示各年份的確定病例數，分析感染病例是否逐年上升/下降 (待完成)
+--------------------------------------------------------------------
 
-期末專題要做HIV感染交叉分析，對於不同年份、縣市、性別、年齡層等因素進行分析與統計， 將以圖表方式呈現、文字輔助說明。
+``` r
+library(ggplot2) 
+```
 
-一、折線圖表示各年份的確定病例數，分析感染病例是否逐漸上升/下降。 二、探討各縣市確定HIV感染之統計。 三、探討男性、女性確定HIV感染之人數差異。 四、探討不同年齡層的確定病例數之排名。 五、以國籍區分，分析台灣的HIV感染病例。
+    ## Warning: package 'ggplot2' was built under R version 3.3.3
+
+``` r
+ggplot(Age_County_Gender_044_DT, 
+       aes(x = 診斷年份, 
+           y = 確定病例數)) + 
+    geom_line()
+```
+
+![](README_files/figure-markdown_github/unnamed-chunk-4-1.png)
+
+以國籍區分，分析台灣的HIV感染病例
+---------------------------------
+
+由下圖可得知2003年至2017年間，本國籍感染病例人數皆大於非本國籍。
+
+``` r
+qplot(診斷年份, data = Age_County_Gender_044_DT, 
+      fill = 國籍,
+      bins = 30)
+```
+
+![](README_files/figure-markdown_github/unnamed-chunk-5-1.png)
+
+探討男性、女性確定HIV感染之人數差異
+-----------------------------------
+
+由下圖可得知2003年至2017年間，男性感染病例人數皆大於女性。
+
+``` r
+qplot(診斷年份, data = Age_County_Gender_044_DT, 
+      fill = 性別,
+      bins = 30)
+```
+
+![](README_files/figure-markdown_github/unnamed-chunk-6-1.png)
+
+探討不同年齡層的確定病例數之排名 (待完成)
+-----------------------------------------
+
+探討各縣市確定HIV感染之統計 (待完成)
+------------------------------------
+
+``` r
+library(ggmap)
+```
+
+    ## Warning: package 'ggmap' was built under R version 3.3.3
+
+``` r
+twmap <- get_map(location = 'Taiwan', zoom = 7,language = "zh-TW")
+```
+
+    ## Map from URL : http://maps.googleapis.com/maps/api/staticmap?center=Taiwan&zoom=7&size=640x640&scale=2&maptype=terrain&language=zh-TW&sensor=false
+
+    ## Information from URL : http://maps.googleapis.com/maps/api/geocode/json?address=Taiwan&sensor=false
+
+``` r
+ggmap(twmap)
+```
+
+![](README_files/figure-markdown_github/unnamed-chunk-8-1.png)
