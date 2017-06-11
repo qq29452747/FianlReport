@@ -79,17 +79,20 @@ bad
 將原本是一片模糊的情況，刻畫出基本輪廍
 
 假設：
-1.20-24 年輕氣盛，愛滋病例數最多
-2.
-3.
+1.年齡層20-24愛滋病例數最多。（年輕氣盛）
+2.7-8月份愛滋中獎率最高。（暑假happy期間）
+3.感染病例應足年遞減。（政策、教育宣達）
+4.台北市受感染病例最多。（首都、世界知名地點深夜場所眾多）
+
+
+結果：
+1.年齡層落在25-29受感染人數最多，可能原因出社會
+2.3月份最多，但1-12月受感染人數皆在+-100內，故認定受感染人數比例和月份無正相關
+3.自2005年爆發期後，立法院修法加強輔導各單位宣達，透過台灣紅絲帶基金會，防範愛滋病變降低了一些，但2006至今年感染人數皆在900上下，感染途徑主要還是由不安全的性行為而感染，其次為毒品使用者。
+4.台北市比例算是高可能原因如上，其他縣市皆大至符合人口數與受感染病例人數正相關。
 
 
 ```{r}
-
-
-bb<-data.table(aa)
-ss<-bb[grepl('20-24',年齡層)]
-ss
 
 ac<-data.table(aa)
 be<-group_by(ac,年齡層)%>%  
@@ -98,6 +101,24 @@ bae<-arrange(be,
         desc(總確定病例數))
 bae
 
+ac<-data.table(aa)
+bb<-group_by(ac,診斷月份)%>%  
+    summarise(總確定病例數=n())
+bab<-arrange(bb,                
+        desc(總確定病例數))
+bab
+
+ac<-data.table(aa)
+ba<-group_by(ac,診斷年份)%>%    
+    summarise(總確定病例數=n())
+ba
+
+ac<-data.table(aa)
+bc<-group_by(ac,縣市)%>%  
+    summarise(總確定病例數=n())
+bac<-arrange(bc,                
+        desc(總確定病例數))
+bac
 
 ```
 
@@ -106,25 +127,23 @@ bae
 期末專題要做HIV感染交叉分析，對於不同年份、縣市、性別、年齡層等因素進行分析與統計，
 將以圖表方式呈現、文字輔助說明。
 
-一、折線圖表示各年份的確定病例數，分析感染病例是否逐漸上升/下降。
+一、點線圖表示各年份的確定病例數，分析感染病例是否逐漸上升/下降。
 二、探討各縣市確定HIV感染之統計。
 三、探討男性、女性確定HIV感染之人數差異。
 四、探討不同年齡層的確定病例數之排名。
 五、以國籍區分，分析台灣的HIV感染病例。
 
 ```{r}
-
+library(ggplot2)
 ac<-data.table(aa)
-ba<-group_by(ac,診斷年份)%>%  
+ba<-group_by(ac,診斷年份)%>%    
     summarise(總確定病例數=n())
-ba
-
-ac<-data.table(aa)
-bb<-group_by(ac,縣市)%>%  
-    summarise(總確定病例數=n())
-bb
-
-
+colnames(ba)=c("YEARS","AIDS_NUMBERS")
+ggplot(ba,
+       aes(x=YEARS,
+           y=AIDS_NUMBERS))+
+  geom_point()+
+  geom_smooth()
 
 
 
