@@ -144,7 +144,15 @@ ggplot(ba,
            y=AIDS_NUMBERS))+
   geom_point()+
   geom_smooth()
-
+library(treemap)
+treemap(aa,
+       index=c("縣市"), #分組依據
+       vSize="確定病例數", #區塊大小
+       vColor="診斷月份", #顏色深淺
+       type="value")+ theme(text=element_text(family="DFKai-SB"))
+qplot(診斷年份, data =aa, 
+      fill = 性別,
+      bins = 30)+ theme(text=element_text(family="STKaiti"))
 
 
 ```
