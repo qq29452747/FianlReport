@@ -41,6 +41,7 @@ library(data.table)
 
 
 str(aa)
+
 complete.cases(aa)
 
 
@@ -85,14 +86,16 @@ bad
 4.台北市受感染病例最多。（首都、世界知名地點深夜場所眾多）
 
 
-結果：
+結果預測：
 1.年齡層落在25-29受感染人數最多，可能原因出社會
-2.3月份最多，但1-12月受感染人數皆在+-100內，故認定受感染人數比例和月份無正相關
-3.自2005年爆發期後，立法院修法加強輔導各單位宣達，透過台灣紅絲帶基金會，防範愛滋病變降低了一些，但2006至今年感染人數皆在900上下，感染途徑主要還是由不安全的性行為而感染，其次為毒品使用者。
+2.3月份最多，但1-12月受感染人數皆在+-100內，故認定受感染人數比例和月份無相關性
+3.自2005年爆發期後，立法院修法加強輔導各單位宣達，透過台灣紅絲帶基金會，防範愛滋病變降低了一些，但2006至今年感染人數皆在900上下，似���恆向動態ㄆ平衡，感染途徑主要還是由不安全的性行為而感染，其次為毒品使用者。
 4.台北市比例算是高可能原因如上，其他縣市皆大至符合人口數與受感染病例人數正相關。
 
 
 ```{r}
+library(dplyr)
+library(data.table)
 
 ac<-data.table(aa)
 be<-group_by(ac,年齡層)%>%  
@@ -128,13 +131,24 @@ bac
 將以圖表方式呈現、文字輔助說明。
 
 一、點線圖表示各年份的確定病例數，分析感染病例是否逐漸上升/下降。
-二、探討各縣市確定HIV感染之統計。
+## 二、探討各縣市確定HIV感染之統計。
 三、探討男性、女性確定HIV感染之人數差異。
 四、探討不同年齡層的確定病例數之排名。
 五、以國籍區分，分析台灣的HIV感染病例。
 
+library(treemap)
+treemap(aa,
+       index=c("縣市"), #分組依據
+       vSize="確定病例數", #區塊大小
+       vColor="診斷月份", #顏色深淺
+       type="value")+ theme(text=element_text(family="DFKai-SB"))
+
+
 ```{r}
 library(ggplot2)
+library(ggthemes)
+library(scales)
+
 ac<-data.table(aa)
 ba<-group_by(ac,診斷年份)%>%    
     summarise(總確定病例數=n())
@@ -144,15 +158,41 @@ ggplot(ba,
            y=AIDS_NUMBERS))+
   geom_point()+
   geom_smooth()
+#逐漸上升
+
+qplot(診斷年份, data =aa, 
+      fill = 性別,
+      bins = 30)+ theme(text=element_text(family="STKaiti"))
+#男女病例數正相關
+
+ggplot(aa, 
+       aes(x = 診斷年份, 
+           y = 確定病例數)) + 
+    geom_point()+facet_grid(.~年齡層)+ theme(text=element_text(family="STKaiti"))
+#橫向分類
+
+ggplot(aa, aes(x=診斷年份,
+               fill=國籍)) +
+  geom_bar() +
+  scale_fill_ptol() +
+  theme_minimal()+ theme(text=element_text(family="STKaiti"))
+
+
+
+ggplot(aa, 
+       aes(x = 診斷年份, 
+           y = 確定病例數,
+           color=縣市,
+           bins = 10)) + 
+    geom_line()+ theme(text=element_text(family="STKaiti"))
+
+
 library(treemap)
 treemap(aa,
        index=c("縣市"), #分組依據
        vSize="確定病例數", #區塊大小
-       vColor="診斷月份", #顏色深淺
-       type="value")+ theme(text=element_text(family="DFKai-SB"))
-qplot(診斷年份, data =aa, 
-      fill = 性別,
-      bins = 30)+ theme(text=element_text(family="STKaiti"))
+       vColor="診斷年份", #顏色深淺
+       type="value")+ theme(text=element_text(family="STKaiti"))
 
 
 ```
