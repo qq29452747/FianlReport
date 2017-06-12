@@ -39,7 +39,6 @@ aa
 library(dplyr)
 library(data.table)
 
-
 str(aa)
 
 complete.cases(aa)
@@ -136,12 +135,6 @@ bac
 四、探討不同年齡層的確定病例數之排名。
 五、以國籍區分，分析台灣的HIV感染病例。
 
-library(treemap)
-treemap(aa,
-       index=c("縣市"), #分組依據
-       vSize="確定病例數", #區塊大小
-       vColor="診斷月份", #顏色深淺
-       type="value")+ theme(text=element_text(family="DFKai-SB"))
 
 
 ```{r}
