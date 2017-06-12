@@ -88,7 +88,7 @@ bad
 結果預測：
 1.年齡層落在25-29受感染人數最多，可能原因出社會
 2.3月份最多，但1-12月受感染人數皆在+-100內，故認定受感染人數比例和月份無相關性
-3.自2005年爆發期後，立法院修法加強輔導各單位宣達，透過台灣紅絲帶基金會，防範愛滋病變降低了一些，但2006至今年感染人數皆在900上下，似���恆向動態ㄆ平衡，感染途徑主要還是由不安全的性行為而感染，其次為毒品使用者。
+3.自2005年爆發期後，立法院修法加強輔導各單位宣達，透過台灣紅絲帶基金會，防範愛滋病變降低了一些，但2006至今年感染人數皆在900上下，發展似恆動態平衡，感染途徑主要還是由不安全的性行為而感染，其次為毒品使用者。
 4.台北市比例算是高可能原因如上，其他縣市皆大至符合人口數與受感染病例人數正相關。
 
 
@@ -145,10 +145,10 @@ library(scales)
 ac<-data.table(aa)
 ba<-group_by(ac,診斷年份)%>%    
     summarise(總確定病例數=n())
-colnames(ba)=c("YEARS","AIDS_NUMBERS")
+colnames(ba)=c("YEARS","HIV_NUMBERS")
 ggplot(ba,
        aes(x=YEARS,
-           y=AIDS_NUMBERS))+
+           y=HIV_NUMBERS))+
   geom_point()+
   geom_smooth()
 #逐漸上升
@@ -176,16 +176,10 @@ ggplot(aa,
        aes(x = 診斷年份, 
            y = 確定病例數,
            color=縣市,
-           bins = 10)) + 
+           bins = 30)) + 
     geom_line()+ theme(text=element_text(family="STKaiti"))
 
 
-library(treemap)
-treemap(aa,
-       index=c("縣市"), #分組依據
-       vSize="確定病例數", #區塊大小
-       vColor="診斷年份", #顏色深淺
-       type="value")+ theme(text=element_text(family="STKaiti"))
 
 
 ```
